@@ -1,19 +1,23 @@
-import React, { Component } from 'react'
-import { createStore } from 'redux'
-import logo from './logo.svg'
-import './App.css'
+import React from 'react'
 
-class App extends Component {
-  render() {
+class App extends React.Component {
+  constructor (props) {
+    super(props)
+  }
+
+  render () {
+    const store     = this.props.store,
+          num         = store.getState(),
+          addGUN      = this.props.addGUN,
+          removeGUN   = this.props.removeGUN,
+          addGUNAsync = this.props.addGUNAsync
+
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">hello linfan</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <div>
+        <h1>现在有机枪 { num }</h1>
+        <button onClick = { () => store.dispatch(addGUN()) }>申请武器</button>
+        <button onClick = { () => store.dispatch(removeGUN()) }>回收武器</button>
+        <button onClick = { () => store.dispatch(addGUNAsync()) }>托两天再给</button>
       </div>
     )
   }
