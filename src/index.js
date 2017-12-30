@@ -1,21 +1,36 @@
 import React from 'react'
 import ReactDom from 'react-dom'
-import { createStore, applyMiddleware } from 'redux'
+import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
-import App from './app'
-import { counter, addGUN, removeGUN, addGUNAsync } from './index.redux'
+import { Provider } from 'react-redux'
+import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom'
 
-let store = createStore(counter, applyMiddleware(thunk))
+import reducers from './reducer'
+import Auth from './auth'
+import Dashboard from './dashboard'
 
-function render () {
-  ReactDom.render(<App
-    store       = { store }
-    addGUN      = { addGUN }
-    removeGUN   = { removeGUN }
-    addGUNAsync = { addGUNAsync }
-  />, document.getElementById('root'))                                                                                    
-}
+const store = createStore(reducers, compose (
+  applyMiddleware(thunk),
+  window.devToolsExtension ? window.devToolsExtension() : f => f
+))
 
-render()
+console.log(store.getState())
 
-store.subscribe(render)
+// 登录
+// 没有登录信息.统一跳转到login
+// 页面 导航 显示 注销
+// 一营
+// 二营
+// 骑兵连
+// router + redux
+ReactDom.render((
+  <Provider store = { store }>
+    <BrowserRouter>
+      <Switch>
+        <Route path = '/login' component = { Auth }></Route>
+        <Route path = '/dashboard' component = { Dashboard }></Route>
+        <Redirect to = '/dashboard'></Redirect>
+      </Switch>
+    </BrowserRouter>
+  </Provider>
+), document.getElementById('root'))
